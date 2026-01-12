@@ -1,0 +1,24 @@
+{
+  "redirects": [
+    {
+      "source": "/project/001",
+      "destination": "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=",
+      "permanent": false
+    },
+    {
+      "source": "/project/001/",
+      "destination": "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=",
+      "permanent": false
+    },
+    {
+      "source": "/project/002",
+      "destination": "https://app-hdoaeq.openinstall.com/page/hdoaeq/js-test?=",
+      "permanent": false
+    },
+    {
+      "source": "/project/002/",
+      "destination": "https://app-hdoaeq.openinstall.com/page/hdoaeq/js-test?=",
+      "permanent": false
+    }
+  ]
+}

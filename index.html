@@ -297,7 +297,14 @@
 
     function openApp() {
       // 自定义 URL 方案
-      window.location.href = "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=";
+      const path = window.location.pathname;
+      const routeToUrl = {
+        "/project/001": "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=",
+        "/project/002": "https://app-hdoaeq.openinstall.com/page/hdoaeq/js-test?="
+      };
+
+      const targetUrl = routeToUrl[path] || routeToUrl[path.replace(/\/$/, "")] || "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=";
+      window.location.href = targetUrl;
     }
   </script>
 </body>
