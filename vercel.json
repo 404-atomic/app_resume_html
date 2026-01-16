@@ -15,6 +15,14 @@
     {
       "source": "/project/002/",
       "destination": "/index.html"
+    },
+    {
+      "source": "/project/003",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/project/003/",
+      "destination": "/index.html"
     }
   ]
 }
