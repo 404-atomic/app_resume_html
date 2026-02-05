@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="utf-8" />
   <title>更新就绪</title>
@@ -42,6 +43,7 @@
         opacity: 0;
         transform: translateY(30px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -61,9 +63,12 @@
     }
 
     @keyframes pulse {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
       }
+
       50% {
         transform: scale(1.05);
       }
@@ -111,9 +116,11 @@
         transform: scale(0.8);
         opacity: 0.5;
       }
+
       50% {
         transform: scale(1.1);
       }
+
       100% {
         transform: scale(1);
         opacity: 1;
@@ -243,43 +250,44 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="icon">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
       </svg>
     </div>
-    
+
     <h2>更新就绪</h2>
     <p class="message">您的应用已成功更新</p>
-    
+
     <div class="countdown">
-      <span class="countdown-number" id="count">5</span>
+      <span class="countdown-number" id="count">3</span>
       <span class="countdown-label">秒</span>
     </div>
-    
+
     <button class="button" onclick="openApp()">立即打开</button>
-    
+
     <div class="progress-bar">
       <div class="progress-fill" id="progress"></div>
     </div>
   </div>
 
   <script>
-    let seconds = 5;
+    let seconds = 3;
     const counter = document.getElementById("count");
     const progressBar = document.getElementById("progress");
-    const totalSeconds = 5;
+    const totalSeconds = 3;
 
     const timer = setInterval(() => {
       seconds--;
       counter.innerText = seconds;
-      
+
       // 更新进度条
       const progress = ((totalSeconds - seconds) / totalSeconds) * 100;
       progressBar.style.width = progress + '%';
-      
+
       // 添加倒计时数字动画
       counter.style.animation = 'none';
       setTimeout(() => {
@@ -301,7 +309,8 @@
       const routeToUrl = {
         "/project/001": "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=",
         "/project/002": "https://app-hdoaeq.openinstall.com/page/hdoaeq/js-test?=",
-        "/project/003": "https://app-b2qvh5.openinstall.com/page/b2qvh5/js-test?="
+        "/project/003": "https://app-b2qvh5.openinstall.com/page/b2qvh5/js-test?=",
+        "/project/colorscode": "https://app-b6tu60.openinstall.com/page/b2qvh5/js-test?=",
       };
 
       const targetUrl = routeToUrl[path] || routeToUrl[path.replace(/\/$/, "")] || "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=";
@@ -309,4 +318,5 @@
     }
   </script>
 </body>
+
 </html>

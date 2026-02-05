@@ -23,6 +23,14 @@
     {
       "source": "/project/003/",
       "destination": "/index.html"
+    },
+    {
+      "source": "/project/colorscode",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/project/colorscode/",
+      "destination": "/index.html"
     }
   ]
 }
