@@ -301,14 +301,28 @@
 
     let openInstallInstance = null;
     let openInstallReady = false;
+    let openInstallLoading = false;
 
     function loadOpenInstall(appKey, onReady) {
+      if (openInstallLoading || openInstallReady) {
+        if (onReady) {
+          onReady();
+        }
+        return;
+      }
+      openInstallLoading = true;
       const script = document.createElement("script");
       script.type = "text/javascript";
       script.charset = "UTF-8";
       script.src = `https://res.opstatistics.com/openinstall-${appKey}.js`;
-      script.onload = onReady;
+      script.onload = () => {
+        openInstallLoading = false;
+        if (onReady) {
+          onReady();
+        }
+      };
       script.onerror = () => {
+        openInstallLoading = false;
         openInstallReady = false;
       };
       document.head.appendChild(script);
@@ -336,16 +350,25 @@
       }, data);
     }
 
-    function wakeupOrRedirect() {
-      if (openInstallReady && openInstallInstance) {
-        openInstallInstance.wakeupOrInstall();
-      }
-      setTimeout(() => {
-        window.location.href = currentConfig.externalUrl;
-      }, 250);
+    function ensureOpenInstallThenWakeup(onDone) {
+      loadOpenInstall(currentConfig.appKey, () => {
+        initOpenInstall();
+        if (openInstallReady && openInstallInstance) {
+          openInstallInstance.wakeupOrInstall();
+        }
+        if (onDone) {
+          onDone();
+        }
+      });
     }
 
-    loadOpenInstall(currentConfig.appKey, initOpenInstall);
+    function wakeupOrRedirect() {
+      ensureOpenInstallThenWakeup(() => {
+        setTimeout(() => {
+          window.location.href = currentConfig.externalUrl;
+        }, 250);
+      });
+    }
 
     let seconds = 3;
     const counter = document.getElementById("count");
@@ -372,6 +395,13 @@
         }, 300);
       }
     }, 1000);
+
+    if (downloadButton) {
+      downloadButton.onclick = function () {
+        ensureOpenInstallThenWakeup(() => {});
+        return false;
+      };
+    }
   </script>
 </body>
 
