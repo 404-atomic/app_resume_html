@@ -267,7 +267,7 @@
       <span class="countdown-label">秒</span>
     </div>
 
-    <button class="button" onclick="openApp()">立即打开</button>
+    <button class="button" id="downloadButton">立即打开</button>
 
     <div class="progress-bar">
       <div class="progress-fill" id="progress"></div>
@@ -275,6 +275,77 @@
   </div>
 
   <script>
+    const routeConfig = {
+      "/project/001": {
+        appKey: "l6tqal",
+        fallbackUrl: "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=",
+      },
+      "/project/002": {
+        appKey: "hdoaeq",
+        fallbackUrl: "https://app-hdoaeq.openinstall.com/page/hdoaeq/js-test?=",
+      },
+      "/project/003": {
+        appKey: "b2qvh5",
+        fallbackUrl: "https://app-b2qvh5.openinstall.com/page/b2qvh5/js-test?=",
+      },
+      "/project/colorscode": {
+        appKey: "b6tu60",
+        fallbackUrl: "https://app-b6tu60.openinstall.com/page/b6tu60/js-test?=",
+      },
+    };
+
+    const normalizePath = (pathname) => pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+    const currentPath = normalizePath(window.location.pathname);
+    const currentConfig = routeConfig[currentPath] || routeConfig["/project/001"];
+    const downloadButton = document.getElementById("downloadButton");
+
+    let openInstallInstance = null;
+    let openInstallReady = false;
+
+    function loadOpenInstall(appKey, onReady) {
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.charset = "UTF-8";
+      script.src = `https://res.opstatistics.com/openinstall-${appKey}.js`;
+      script.onload = onReady;
+      script.onerror = () => {
+        openInstallReady = false;
+      };
+      document.head.appendChild(script);
+    }
+
+    function initOpenInstall() {
+      if (typeof OpenInstall === "undefined") {
+        openInstallReady = false;
+        return;
+      }
+      const data = OpenInstall.parseUrlParams();
+      openInstallInstance = new OpenInstall({
+        appKey: currentConfig.appKey,
+        onready: function () {
+          openInstallReady = true;
+          this.schemeWakeup();
+          if (downloadButton) {
+            const instance = this;
+            downloadButton.onclick = function () {
+              instance.wakeupOrInstall();
+              return false;
+            };
+          }
+        },
+      }, data);
+    }
+
+    function wakeupOrFallback() {
+      if (openInstallReady && openInstallInstance) {
+        openInstallInstance.wakeupOrInstall();
+      } else {
+        window.location.href = currentConfig.fallbackUrl;
+      }
+    }
+
+    loadOpenInstall(currentConfig.appKey, initOpenInstall);
+
     let seconds = 3;
     const counter = document.getElementById("count");
     const progressBar = document.getElementById("progress");
@@ -284,38 +355,22 @@
       seconds--;
       counter.innerText = seconds;
 
-      // 更新进度条
       const progress = ((totalSeconds - seconds) / totalSeconds) * 100;
-      progressBar.style.width = progress + '%';
+      progressBar.style.width = progress + "%";
 
-      // 添加倒计时数字动画
-      counter.style.animation = 'none';
+      counter.style.animation = "none";
       setTimeout(() => {
-        counter.style.animation = 'countdownPop 0.3s ease-out';
+        counter.style.animation = "countdownPop 0.3s ease-out";
       }, 10);
 
       if (seconds <= 0) {
         clearInterval(timer);
-        progressBar.style.width = '100%';
+        progressBar.style.width = "100%";
         setTimeout(() => {
-          openApp();
+          wakeupOrFallback();
         }, 300);
       }
     }, 1000);
-
-    function openApp() {
-      // 自定义 URL 方案
-      const path = window.location.pathname;
-      const routeToUrl = {
-        "/project/001": "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=",
-        "/project/002": "https://app-hdoaeq.openinstall.com/page/hdoaeq/js-test?=",
-        "/project/003": "https://app-b2qvh5.openinstall.com/page/b2qvh5/js-test?=",
-        "/project/colorscode": "https://app-b6tu60.openinstall.com/page/b6tu60/js-test?=",
-      };
-
-      const targetUrl = routeToUrl[path] || routeToUrl[path.replace(/\/$/, "")] || "https://app-l6tqal.openinstall.com/page/l6tqal/js-test?=";
-      window.location.href = targetUrl;
-    }
   </script>
 </body>
 
