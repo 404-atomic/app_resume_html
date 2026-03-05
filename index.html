@@ -1,37 +1,370 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenInstall</title>
-</head>
-<body>
-  <script>
-    const appKey = "b6tu60";
+  <title>更新就绪</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    function loadOpenInstall(key, onReady) {
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      background: #f2f2f7;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #1d1d1f;
+      overflow: hidden;
+    }
+
+    .container {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 48px 32px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      background: #007AFF;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .icon svg {
+      width: 48px;
+      height: 48px;
+      fill: white;
+    }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .message {
+      font-size: 17px;
+      color: #6e6e73;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .countdown {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .countdown-number {
+      font-size: 48px;
+      font-weight: 700;
+      color: #007AFF;
+      min-width: 60px;
+      animation: countdownPop 0.3s ease-out;
+    }
+
+    @keyframes countdownPop {
+      0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .countdown-label {
+      font-size: 17px;
+      color: #6e6e73;
+      font-weight: 500;
+    }
+
+    .button {
+      width: 100%;
+      padding: 16px 32px;
+      background: #007AFF;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .button:active {
+      transform: scale(0.97);
+      opacity: 0.8;
+    }
+
+    .button:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .button:hover {
+      background: #0051D5;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #e5e5ea;
+      border-radius: 2px;
+      margin-top: 24px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #007AFF;
+      border-radius: 2px;
+      transition: width 1s linear;
+      width: 0%;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 40px 24px;
+        border-radius: 20px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      .countdown-number {
+        font-size: 40px;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #000000;
+      }
+
+      .container {
+        background: #1c1c1e;
+        color: #ffffff;
+      }
+
+      h2 {
+        color: #ffffff;
+      }
+
+      .message,
+      .countdown-label {
+        color: #98989d;
+      }
+
+      .countdown-number {
+        color: #0a84ff;
+      }
+
+      .button {
+        background: #0a84ff;
+      }
+
+      .button:hover {
+        background: #0051D5;
+      }
+
+      .progress-bar {
+        background: #38383a;
+      }
+
+      .progress-fill {
+        background: #0a84ff;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+      </svg>
+    </div>
+
+    <h2>更新就绪</h2>
+    <p class="message">您的应用已成功更新</p>
+
+    <div class="countdown">
+      <span class="countdown-number" id="count">3</span>
+      <span class="countdown-label">秒</span>
+    </div>
+
+    <button class="button" id="downloadButton">立即打开</button>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress"></div>
+    </div>
+  </div>
+
+  <script>
+    const appKey = "tzr99d";
+    const downloadButton = document.getElementById("downloadButton");
+
+    let oi = null;
+    let oiInited = false;
+    let oiLoading = false;
+
+    function loadOpenInstall(cb) {
+      if (oiLoading) return;
+      if (window.OpenInstall) return cb?.();
+
+      oiLoading = true;
       const script = document.createElement("script");
       script.type = "text/javascript";
       script.charset = "UTF-8";
-      script.src = `https://res.opstatistics.com/openinstall-${key}.js`;
-      script.onload = () => onReady && onReady();
+      script.src = `https://res.opstatistics.com/openinstall-${appKey}.js`;
+      script.onload = () => {
+        oiLoading = false;
+        cb?.();
+      };
+      script.onerror = () => {
+        oiLoading = false;
+        console.warn("OpenInstall SDK load failed");
+      };
       document.head.appendChild(script);
     }
 
-    function initOpenInstall() {
-      if (typeof OpenInstall === "undefined") return;
+    function initOpenInstallOnce() {
+      if (oiInited) return;
+      if (!window.OpenInstall) return;
+
       const data = OpenInstall.parseUrlParams();
-      const instance = new OpenInstall({
-        appKey,
-        onready: function () {
-          this.schemeWakeup();
-          this.wakeupOrInstall();
-        }
-      }, data);
-      return instance;
+      oi = new OpenInstall(
+        {
+          appKey,
+          onready: function () {
+            // Note: schemeWakeup() auto-attempt may still be blocked in many browsers;
+            // but this call itself is allowed as per their doc.
+            this.schemeWakeup();
+          },
+        },
+        data
+      );
+
+      oiInited = true;
     }
 
-    loadOpenInstall(appKey, initOpenInstall);
+    function prepareOpenInstall(cb) {
+      loadOpenInstall(() => {
+        initOpenInstallOnce();
+        cb?.();
+      });
+    }
+
+    // ✅ Only trigger wakeupOrInstall on real click
+    downloadButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      prepareOpenInstall(() => {
+        if (oi) oi.wakeupOrInstall();
+      });
+    });
+
+    // Countdown UI only (do not auto-call wakeupOrInstall)
+    let seconds = 3;
+    const counter = document.getElementById("count");
+    const progressBar = document.getElementById("progress");
+    const totalSeconds = 3;
+
+    const timer = setInterval(() => {
+      seconds--;
+      counter.innerText = seconds;
+
+      const progress = ((totalSeconds - seconds) / totalSeconds) * 100;
+      progressBar.style.width = progress + "%";
+
+      counter.style.animation = "none";
+      setTimeout(() => (counter.style.animation = "countdownPop 0.3s ease-out"), 10);
+
+      if (seconds <= 0) {
+        clearInterval(timer);
+        progressBar.style.width = "100%";
+        // Optional: focus / pulse the button instead of auto wakeup
+        downloadButton.focus();
+        downloadButton.textContent = "点击打开";
+      }
+    }, 1000);
+
+    // Init early (good)
+    prepareOpenInstall();
   </script>
 </body>
+
 </html>
